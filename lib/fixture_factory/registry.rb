@@ -36,16 +36,16 @@ module FixtureFactory
       # === Example
       #
       # define_factories do
-      #   fixture(:user, like: :bob)
-      #   fixture(:active_user, parent: :user) do
+      #   factory(:user, like: :bob)
+      #   factory(:active_user, parent: :user) do
       #     { active: true }
       #   end
-      #   fixture(:cool_user, class: 'User') do
+      #   factory(:cool_user, class: 'User') do
       #     { status: :cool }
       #   end
-      #   fixture(:admin, via: :users, like: :bob_admin, class: 'User')
+      #   factory(:admin, via: :users, like: :bob_admin, class: 'User')
       # end
-      def fixture(name, options = {}, &block)
+      def factory(name, options = {}, &block)
         parent = all_factory_definitions[options[:parent]]
         options[:parent] = parent if options.key?(:parent)
         options[:block]  = block if block
@@ -59,12 +59,12 @@ module FixtureFactory
       #
       # class SomeTest < ActiveSupport::TestCase
       #   define_factories do
-      #     fixture(:blog)
+      #     factory(:blog)
       #   end
       # end
       #
       # SomeTest.define_factories do
-      #   fixture(:post)
+      #   factory(:post)
       # end
       def define_factories(&block)
         self.fixture_factory_definitions = {}.with_indifferent_access

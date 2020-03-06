@@ -8,7 +8,7 @@ module FixtureFactory
     include FixtureFactory::Registry
 
     define_factories do
-      fixture(:user) do |count|
+      factory(:user) do |count|
         { email: "user-#{count}@example.com" }
       end
     end

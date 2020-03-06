@@ -24,7 +24,7 @@ module FixtureFactory
     attr_reader :registry, :child_registry
 
     test ".fixture defines fixturies" do
-      block = proc { fixture(:recipe_fixtury, class: Recipe) }
+      block = proc { factory(:recipe_fixtury, class: Recipe) }
       registry.define_factories(&block)
       assert_nothing_raised do
         assert_instance_of FixtureFactory::Definition, registry.all_factory_definitions.fetch(:recipe_fixtury)
@@ -33,10 +33,10 @@ module FixtureFactory
 
     test ".all_factory_definitions returns inherited hash of fixturies" do
       registry.define_factories do
-        fixture(:recipe, class: Recipe)
+        factory(:recipe, class: Recipe)
       end
       child_registry.define_factories do
-        fixture(:recipe_with_instructions, class: Recipe) do
+        factory(:recipe_with_instructions, class: Recipe) do
           { instructions: 'Step 1...' }
         end
       end
@@ -49,10 +49,10 @@ module FixtureFactory
       parent_block = proc { { name: 'Parent' } }
       child_block  = proc { { name: 'Child' } }
       registry.define_factories do
-        fixture(:recipe, class: Recipe, &parent_block)
+        factory(:recipe, class: Recipe, &parent_block)
       end
       child_registry.define_factories do
-        fixture(:recipe, class: Recipe, &child_block)
+        factory(:recipe, class: Recipe, &child_block)
       end
       assert_equal 'Parent', FixtureFactory.build(:recipe, scope: registry).name
       assert_equal 'Child', FixtureFactory.build(:recipe, scope: child_registry).name

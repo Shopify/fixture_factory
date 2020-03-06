@@ -43,8 +43,8 @@ case class. Definitions are made with the `.define_factories` and `.fixture` met
 ```ruby
 class AccountTest < ActiveSupport::TestCase
   define_factories do
-    fixture(:account)
-    fixture(:enterprise_account, class: 'Account') do
+    factory(:account)
+    factory(:enterprise_account, class: 'Account') do
       { plan: :enterprise }
     end
   end
@@ -61,8 +61,8 @@ fixture method you source fixtures from. Fixture with non-standard names can get
 ```ruby
 class RecipeTest < ActiveSupport::TestCase
   define_factories do
-    fixture(:recipe) # infers "Recipe" and "recipes"
-    fixture(:cake_recipe, parent: :recipe) do
+    factory(:recipe) # infers "Recipe" and "recipes"
+    factory(:cake_recipe, parent: :recipe) do
       { name: "Cake" }
     end
   end
@@ -74,7 +74,7 @@ end
 ```ruby
 class RecipeTest < ActiveSupport::TestCase
   define_factories do
-    fixture(:cake_recipe, class: "Recipe", via: :recipes) do
+    factory(:cake_recipe, class: "Recipe", via: :recipes) do
       { name: "Cake" }
     end
   end
@@ -89,8 +89,8 @@ fixtures. This is done with the `via` and `like` options:
 ```ruby
 class UserTest < ActiveSupport::TestCase
   define_factories do
-    fixture(:user, like: :bob)
-    fixture(:admin_user, class: 'User', like: :bob, via: :users) do
+    factory(:user, like: :bob)
+    factory(:admin_user, class: 'User', like: :bob, via: :users) do
       { role: :admin }
     end
   end
@@ -106,13 +106,13 @@ a `parent` factory to inherit options from. Here's an example:
 ```ruby
 class ActiveSupport::TestCase
   define_factories do
-    fixture(:address)
+    factory(:address)
   end
 end
 
 class AddressTest < ActiveSupport::TestCase
   define_factories do
-    fixture(:primary_address, parent: :address)
+    factory(:primary_address, parent: :address)
       { primary: true }
     end
   end
@@ -128,7 +128,7 @@ seed unique values.
 ```ruby
 class ArticleTest < ActiveSupport::TestCase
   define_factories do
-    fixture(:article) do |count| # starts at 1
+    factory(:article) do |count| # starts at 1
       { title: "Unique Article", slug: "article-#{count}" }
     end
   end
@@ -147,7 +147,7 @@ Generates a hash of attributes given a factory name and an optional hash of over
 ```ruby
 class UsersControllerTest < ActionDispatch::IntegrationTest
   define_factories do
-    fixture(:user) do
+    factory(:user) do
       { email: 'user@example.com', admin: false }
     end
   end
@@ -165,7 +165,7 @@ Generates an array of hash attributes given a factory name, a count, and an opti
 ```ruby
 class BooksControllerTest < ActionDispatch::IntegrationTest
   define_factories do
-    fixture(:book) do
+    factory(:book) do
       { title: 'Ruby Under a Microscope' }
     end
   end
@@ -183,7 +183,7 @@ Generates an unpersisted instance of a model given a factory name and an optiona
 ```ruby
 class CourseTest < ActiveSupport::TestCase
   define_factories do
-    fixture(:course) do
+    factory(:course) do
       { name: 'Rails for Zombies' }
     end
   end
@@ -201,7 +201,7 @@ Generates an array of unpersisted model instances given a factory name and an op
 ```ruby
 class PostTest < ActiveSupport::TestCase
   define_factories do
-    fixture(:post) do
+    factory(:post) do
       { title: 'Rails 5.2' }
     end
   end
@@ -219,7 +219,7 @@ Generates a persisted model instance given a factory name and an optional hash o
 ```ruby
 class CommentTest < ActiveSupport::TestCase
   define_factories do
-    fixture(:comment) do
+    factory(:comment) do
       { content: 'Hello World!', post: build(:post) }
     end
   end
@@ -237,7 +237,7 @@ Generates an array of persisted model instances given a factory name and an opti
 ```ruby
 class BlogTest < ActiveSupport::TestCase
   define_factories do
-    fixture(:blog) do
+    factory(:blog) do
       { name: 'Giant Robots Smashing Into Other Giant Robots' }
     end
   end
