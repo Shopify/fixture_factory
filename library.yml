@@ -1,0 +1,6 @@
+---
+name: FixtureFactory
+stewards:
+  - "@Shopify/kernel-architecture-patterns"
+slack_channels:
+  - "#kernel-code-foundations"

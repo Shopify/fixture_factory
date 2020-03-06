@@ -1,0 +1,6 @@
+bob:
+  name: "Bob"
+  locked: false
+  settings:
+    foo: bar
+    baz: bam
