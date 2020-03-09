@@ -24,6 +24,7 @@ jobs:
       - name: Run tests
         run: |
           gem install bundler
+          rm Gemfile.lock
           bundle install --jobs 4 --retry 3
           bundle exec rake
   lint:
