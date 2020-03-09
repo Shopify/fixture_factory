@@ -32,7 +32,7 @@ module FixtureFactory
     def klass=(new_class)
       @klass = case new_class
       when String
-        new_class.to_s.constantize # rubocop:disable Sorbet/ConstantsFromStrings
+        new_class.to_s.constantize
       else
         new_class
       end

@@ -9,3 +9,5 @@ gem("activemodel")
 gem("activesupport")
 
 gem("sqlite3", "1.4.1")
+gem("rubocop")
+gem("rubocop-shopify", require: false)
