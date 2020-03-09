@@ -9,6 +9,7 @@ Gem::Specification.new do |spec|
   spec.version       = FixtureFactory::VERSION
   spec.authors       = ["Shopify Inc."]
   spec.email         = ["gems@shopify.com"]
+  spec.license       = "MIT"
 
   spec.summary       = "Factories via fixtures"
 
