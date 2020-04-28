@@ -4,16 +4,15 @@ module FixtureFactory
   class Definition # :nodoc:
     EMPTY_BLOCK = proc {}
 
-    attr_reader   :klass
     attr_writer   :block
-    attr_accessor :fixture_method, :fixture_name, :parent, :sequence
+    attr_accessor :class_name, :fixture_method, :fixture_name, :parent, :sequence
 
     def initialize(name, options = {})
-      self.parent         = options.fetch(:parent) { default_parent_for(name) }
-      self.klass          = options.fetch(:class)  { parent.klass }
-      self.fixture_method = options.fetch(:via)    { parent.fixture_method }
-      self.fixture_name   = options.fetch(:like)   { parent.fixture_name }
-      self.block          = options.fetch(:block)  { EMPTY_BLOCK }
+      self.parent         = options.fetch(:parent)     { default_parent_for(name) }
+      self.class_name     = options.fetch(:class_name) { parent.class_name }
+      self.fixture_method = options.fetch(:via)        { parent.fixture_method }
+      self.fixture_name   = options.fetch(:like)       { parent.fixture_name }
+      self.block          = options.fetch(:block)      { EMPTY_BLOCK }
       self.sequence       = Sequence.new
     end
 
@@ -29,15 +28,10 @@ module FixtureFactory
       end
     end
 
-    def klass=(new_class)
-      @klass = case new_class
-      when String
-        new_class.to_s.constantize
-      else
-        new_class
-      end
+    def klass
+      @klass ||= class_name.to_s.constantize
     rescue NameError
-      raise WrongClassError, new_class
+      raise WrongClassError, class_name
     end
 
     def fixture_args
@@ -76,7 +70,7 @@ module FixtureFactory
         name,
         parent: nil,
         like: nil,
-        class: name.to_s.classify.safe_constantize,
+        class_name: name.to_s.classify,
         via: name.to_s.pluralize,
       )
     end

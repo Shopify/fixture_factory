@@ -14,14 +14,14 @@ module FixtureFactory
     test "#initialize derives from default parent defaults" do
       subject = tested_class.new(:some_fixtury)
       assert_instance_of tested_class, subject.parent
-      assert_nil subject.klass
       assert_nil subject.fixture_name
-      assert_equal 'some_fixturies', subject.fixture_method
+      assert_equal "SomeFixtury", subject.class_name
+      assert_equal "some_fixturies", subject.fixture_method
       assert_same empty_block, subject.instance_variable_get(:@block)
     end
 
     test "#initialize allows explicit parent" do
-      parent  = tested_class.new(:parent_fixtury, class: Object, via: :parent_method, like: :parent_name)
+      parent  = tested_class.new(:parent_fixtury, class_name: "Object", via: :parent_method, like: :parent_name)
       subject = tested_class.new(:child_fixtury, parent: parent)
       assert_same parent, subject.parent
       assert_equal parent.klass, subject.klass
@@ -29,8 +29,8 @@ module FixtureFactory
       assert_equal parent.fixture_name, subject.fixture_name
     end
 
-    test "#initialize allows explicit klass" do
-      subject = tested_class.new(:child_fixtury, class: String)
+    test "#initialize allows explicit class name" do
+      subject = tested_class.new(:child_fixtury, class_name: "String")
       assert_equal String, subject.klass
     end
 
@@ -66,26 +66,21 @@ module FixtureFactory
       assert_equal({ parent: true, child: true }, FixtureFactory.evaluate(subject.block, context: self))
     end
 
-    test "#klass= constantizes strings automatically" do
+    test "#klass constantizes class_name later" do
       subject = tested_class.new(:fixture)
-      subject.klass = "Object"
+      subject.class_name = "Object"
       assert_equal Object, subject.klass
     end
 
-    test "#klass= assigns classes normally" do
+    test "#klass raises WrongClassError when class name is invalid" do
       subject = tested_class.new(:fixture)
-      subject.klass = Object
-      assert_equal Object, subject.klass
-    end
-
-    test "#klass= raises WrongClassError when class name is invalid" do
-      subject = tested_class.new(:fixture)
+      subject.class_name = "TheClassIsALie"
       error = assert_raises(WrongClassError) do
-        subject.klass = "TheClassIsALie"
+        subject.klass
       end
       assert_equal <<~MSG.squish, error.message
         No class named "TheClassIsALie".
-        Try using the `class` option in your definition to specify a valid class name.
+        Try using the `class_name` option in your definition to specify a valid class name.
         https://github.com/Shopify/fixture_factory/blob/master/README.md#naming
       MSG
     end

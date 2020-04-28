@@ -34,7 +34,7 @@ module FixtureFactory
       super(
         <<~MSG.squish
           No class named "#{class_name}".
-          Try using the `class` option in your definition to specify a valid class name.
+          Try using the `class_name` option in your definition to specify a valid class name.
           https://github.com/Shopify/fixture_factory/blob/master/README.md#naming
         MSG
       )
