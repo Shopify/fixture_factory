@@ -6,7 +6,7 @@ class FixturyTest < FixtureFactory::TestCase
   include FixtureFactory::Registry
 
   define_factories do
-    factory(:post, class: Post) do
+    factory(:post, class_name: "Post") do
       post_factory_attributes
     end
   end
