@@ -13,6 +13,8 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "Factories via fixtures"
 
+  spec.homepage      = "https://github.com/Shopify/fixture_factory"
+
   spec.files = Dir["lib/**/*.rb"]
   spec.require_paths = %w(lib)
 
@@ -25,4 +27,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency("byebug")
   spec.add_development_dependency("rake")
   spec.add_development_dependency("minitest")
+
+  spec.metadata['allowed_push_host'] = "https://rubygems.org"
 end
