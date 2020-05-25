@@ -9,18 +9,18 @@ require 'fixture_factory/errors'
 
 module FixtureFactory
   class << self
-    def attributes_for(name, options) # :nodoc:
-      _, attributes = retrieve(name, options)
+    def attributes_for(name, **options) # :nodoc:
+      _, attributes = retrieve(name, **options)
       attributes
     end
 
-    def build(name, options) # :nodoc:
-      klass, attributes = retrieve(name, options)
+    def build(name, **options) # :nodoc:
+      klass, attributes = retrieve(name, **options)
       klass.new(attributes)
     end
 
-    def create(name, options) # :nodoc:
-      build(name, options).tap(&:save!)
+    def create(name, **options) # :nodoc:
+      build(name, **options).tap(&:save!)
     end
 
     def evaluate(block, args: [], context:) # :nodoc:
