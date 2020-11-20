@@ -8,15 +8,15 @@ module FixtureFactory
     include FixtureFactory::Registry
 
     define_factories do
-      factory(:user, class_name: "User") do
+      factory(:user, class: -> { User }) do
         user_factory_attributes
       end
 
-      factory(:address, class_name: "Address") do
+      factory(:address, class: -> { Address }) do
         address_factory_attributes
       end
 
-      factory(:account, class_name: "Account") do
+      factory(:account, class: -> { Account }) do
         account_factory_attributes
       end
     end
