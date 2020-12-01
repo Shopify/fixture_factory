@@ -24,32 +24,41 @@ module FixtureFactory
     attr_reader :registry, :child_registry
 
     test ".factory defines fixture factories" do
-      block = proc { factory(:recipe_fixtury, class_name: "Recipe") }
+      block = proc { factory(:recipe_fixtury, class: -> { Recipe }) }
       registry.define_factories(&block)
       assert_nothing_raised do
         assert_instance_of FixtureFactory::Definition, registry.all_factory_definitions.fetch(:recipe_fixtury)
       end
     end
 
-    test ".factory works with deprecated class: option" do
-      assert_deprecated do
-        registry.define_factories do
-          factory(:recipe_fixtury, class: "Recipe")
-          factory(:user_fixtury, class: User)
-        end
-      end
+    test ".factory works with class_name: option" do
+      block = proc { factory(:recipe_fixtury, class_name: "Recipe") }
+      registry.define_factories(&block)
       assert_nothing_raised do
         assert_equal Recipe, registry.all_factory_definitions.fetch(:recipe_fixtury).klass
-        assert_equal User, registry.all_factory_definitions.fetch(:user_fixtury).klass
       end
     end
 
-    test ".all_factory_definitions returns inherited hash of fixture factories" do
+    test ".factory raises correct message with class_name: option" do
+      block = proc { factory(:recipe_fixtury, class_name: "NonExistingClass") }
+      registry.define_factories(&block)
+
+      error = assert_raises(WrongClassError) do
+        registry.all_factory_definitions.fetch(:recipe_fixtury).klass
+      end
+      assert_equal <<~MSG.squish, error.message
+        No class named "NonExistingClass".
+        Try using the `class_name` option in your definition to specify a valid class name.
+        https://github.com/Shopify/fixture_factory/blob/master/README.md#naming
+      MSG
+    end
+
+    test ".all_factory_definitions returns inherited hash of fixturies" do
       registry.define_factories do
-        factory(:recipe, class_name: "Recipe")
+        factory(:recipe, class: -> { Recipe })
       end
       child_registry.define_factories do
-        factory(:recipe_with_instructions, class_name: "Recipe") do
+        factory(:recipe_with_instructions, class: -> { Recipe }) do
           { instructions: 'Step 1...' }
         end
       end
@@ -62,10 +71,10 @@ module FixtureFactory
       parent_block = proc { { name: 'Parent' } }
       child_block  = proc { { name: 'Child' } }
       registry.define_factories do
-        factory(:recipe, class_name: "Recipe", &parent_block)
+        factory(:recipe, class: -> { Recipe }, &parent_block)
       end
       child_registry.define_factories do
-        factory(:recipe, class_name: "Recipe", &child_block)
+        factory(:recipe, class: -> { Recipe }, &child_block)
       end
       assert_equal 'Parent', FixtureFactory.build(:recipe, scope: registry).name
       assert_equal 'Child', FixtureFactory.build(:recipe, scope: child_registry).name

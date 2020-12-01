@@ -5,14 +5,14 @@ module FixtureFactory
     EMPTY_BLOCK = proc {}
 
     attr_writer   :block
-    attr_accessor :class_name, :fixture_method, :fixture_name, :parent, :sequence
+    attr_accessor :fixture_method, :fixture_name, :parent, :sequence, :proc_class
 
     def initialize(name, options = {})
-      self.parent         = options.fetch(:parent)     { default_parent_for(name) }
-      self.class_name     = options.fetch(:class_name) { parent.class_name }
-      self.fixture_method = options.fetch(:via)        { parent.fixture_method }
-      self.fixture_name   = options.fetch(:like)       { parent.fixture_name }
-      self.block          = options.fetch(:block)      { EMPTY_BLOCK }
+      self.parent         = options.fetch(:parent) { default_parent_for(name) }
+      self.proc_class     = options.fetch(:class)  { parent.proc_class }
+      self.fixture_method = options.fetch(:via)    { parent.fixture_method }
+      self.fixture_name   = options.fetch(:like)   { parent.fixture_name }
+      self.block          = options.fetch(:block)  { EMPTY_BLOCK }
       self.sequence       = Sequence.new
     end
 
@@ -29,9 +29,9 @@ module FixtureFactory
     end
 
     def klass
-      @klass ||= class_name.to_s.constantize
+      @klass ||= proc_class.call
     rescue NameError
-      raise WrongClassError, class_name
+      raise WrongClassError, proc_class
     end
 
     def fixture_args
@@ -70,7 +70,7 @@ module FixtureFactory
         name,
         parent: nil,
         like: nil,
-        class_name: name.to_s.classify,
+        class: -> { name.to_s.classify.safe_constantize },
         via: name.to_s.pluralize,
       )
     end

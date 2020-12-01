@@ -46,12 +46,13 @@ module FixtureFactory
       #   factory(:admin, via: :users, like: :bob_admin, class: 'User')
       # end
       def factory(name, options = {}, &block)
-        if options.key?(:class)
-          ActiveSupport::Deprecation.warn(<<~MSG.squish)
-            factory class: option is deprecated and will be removed.
-            Please use the class_name: option instead.
-          MSG
-          options[:class_name] ||= options.delete(:class)
+        if options.key?(:class_name)
+          options[:class] ||= -> do
+            class_name = options.delete(:class_name).to_s
+            class_name.constantize
+          rescue NameError
+            raise WrongClassError, class_name
+          end
         end
 
         parent = all_factory_definitions[options[:parent]]

@@ -30,14 +30,32 @@ module FixtureFactory
   end
 
   class WrongClassError < Error
-    def initialize(class_name)
-      super(
-        <<~MSG.squish
-          No class named "#{class_name}".
-          Try using the `class_name` option in your definition to specify a valid class name.
-          https://github.com/Shopify/fixture_factory/blob/master/README.md#naming
-        MSG
-      )
+    def initialize(klass)
+      message = if klass.is_a?(String)
+        string_class_error_message(klass)
+      else
+        proc_class_error_message(klass)
+      end
+      super(message)
+    end
+
+    private
+
+    def proc_class_error_message(proc_class)
+      location, line_number = proc_class.source_location
+      <<~MSG.squish
+        Constant defined in file #{location} on line #{line_number} is not defined.
+        Try using the `class` option in your definition to specify a valid class name.
+        https://github.com/Shopify/fixture_factory/blob/master/README.md#naming
+      MSG
+    end
+
+    def string_class_error_message(class_name)
+      <<~MSG.squish
+        No class named "#{class_name}".
+        Try using the `class_name` option in your definition to specify a valid class name.
+        https://github.com/Shopify/fixture_factory/blob/master/README.md#naming
+      MSG
     end
   end
 end

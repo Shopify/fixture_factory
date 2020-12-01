@@ -44,7 +44,7 @@ case class. Definitions are made with the `.define_factories` and `.fixture` met
 class AccountTest < ActiveSupport::TestCase
   define_factories do
     factory(:account)
-    factory(:enterprise_account, class: 'Account') do
+    factory(:enterprise_account, class: -> { Account }) do
       { plan: :enterprise }
     end
   end
@@ -74,7 +74,7 @@ end
 ```ruby
 class RecipeTest < ActiveSupport::TestCase
   define_factories do
-    factory(:cake_recipe, class: "Recipe", via: :recipes) do
+    factory(:cake_recipe, class: -> { Recipe }, via: :recipes) do
       { name: "Cake" }
     end
   end
@@ -90,7 +90,7 @@ fixtures. This is done with the `via` and `like` options:
 class UserTest < ActiveSupport::TestCase
   define_factories do
     factory(:user, like: :bob)
-    factory(:admin_user, class: 'User', like: :bob, via: :users) do
+    factory(:admin_user, class: -> { User }, like: :bob, via: :users) do
       { role: :admin }
     end
   end
