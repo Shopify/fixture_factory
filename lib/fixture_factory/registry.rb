@@ -79,7 +79,7 @@ module FixtureFactory
         unless fixture_factory_definitions
           self.fixture_factory_definitions = {}.with_indifferent_access
         end
-        
+                
         instance_exec(&block) if block.present?
       end
 
