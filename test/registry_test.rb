@@ -110,7 +110,7 @@ module FixtureFactory
       child_registry.define_factories do
         factory(:recipe)
       end
-      assert_equal child_registry.fixture_factory_definitions.keys, ["recipe"]
+      assert_equal ["recipe"], child_registry.fixture_factory_definitions.keys
     end
   end
 end

@@ -76,7 +76,7 @@ module FixtureFactory
       #   factory(:post)
       # end
       def define_factories(&block)
-        unless self.fixture_factory_definitions
+        unless fixture_factory_definitions
           self.fixture_factory_definitions = {}.with_indifferent_access
         end
         
