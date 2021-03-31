@@ -88,5 +88,29 @@ module FixtureFactory
       end
       assert_equal({}.with_indifferent_access, registry.fixture_factory_definitions)
     end
+
+    test ".define_factories does not clear existing factory definitions" do
+      assert_nil registry.fixture_factory_definitions
+      registry.define_factories do
+        factory(:user)
+      end
+
+      registry.define_factories do
+        factory(:team)
+      end
+
+      assert_equal(["user", "team"], registry.fixture_factory_definitions.keys)
+    end
+
+    test ".fixture_factory_definitions do not contain parent definitions" do
+      child_registry = ChildTestRegistry
+      registry.define_factories do
+        factory(:book)
+      end
+      child_registry.define_factories do
+        factory(:recipe)
+      end
+      assert_equal child_registry.fixture_factory_definitions.keys, ["recipe"]
+    end
   end
 end

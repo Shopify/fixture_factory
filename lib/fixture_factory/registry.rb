@@ -76,9 +76,7 @@ module FixtureFactory
       #   factory(:post)
       # end
       def define_factories(&block)
-        if self.fixture_factory_definitions
-          self.fixture_factory_definitions = self.fixture_factory_definitions.clone
-        else
+        unless self.fixture_factory_definitions
           self.fixture_factory_definitions = {}.with_indifferent_access
         end
         
