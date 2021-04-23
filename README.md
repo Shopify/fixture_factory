@@ -38,7 +38,7 @@ When testing models with complex state, a fixture factory can:
 ## Definition
 
 FixtureFactory definitions can be made by anything that includes `FixtureFactory::Registry`. Typically, this is a test
-case class. Definitions are made with the `.define_factories` and `.fixture` method:
+case class. Definitions are made with the `.define_factories` and `.factory` method:
 
 ```ruby
 class AccountTest < ActiveSupport::TestCase
@@ -112,7 +112,7 @@ end
 
 class AddressTest < ActiveSupport::TestCase
   define_factories do
-    factory(:primary_address, parent: :address)
+    factory(:primary_address, parent: :address) do
       { primary: true }
     end
   end
