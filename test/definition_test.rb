@@ -87,7 +87,7 @@ module FixtureFactory
 
     test "#fixture_args returns fixture arguments" do
       subject = tested_class.new(:fixture, via: :users, like: :bob)
-      assert_equal %i(users bob), subject.fixture_args
+      assert_equal [:users, :bob], subject.fixture_args
     end
 
     test "#from_fixture? returns true when fixture attributes present" do

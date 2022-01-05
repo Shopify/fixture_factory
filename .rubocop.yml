@@ -5,3 +5,6 @@ AllCops:
   SuggestExtensions: false
   NewCops: disable
   TargetRubyVersion: 3.1.0
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never

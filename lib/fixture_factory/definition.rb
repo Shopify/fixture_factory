@@ -18,7 +18,7 @@ module FixtureFactory
 
     def block
       all_blocks = [parent&.block, @block].compact
-      -> (*args) do
+      ->(*args) do
         all_blocks.reduce({}) do |attributes, block|
           block_attributes = FixtureFactory.evaluate(
             block, args: args, context: self

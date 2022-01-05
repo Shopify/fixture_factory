@@ -60,9 +60,9 @@ module FixtureFactory
     test "#build_list with overrides returns a list of attributes of a model with overrides" do
       count = 5
       account_list = count.times.map do
-        Account.new(account_factory_attributes.merge(company: 'Apple Inc.'))
+        Account.new(account_factory_attributes.merge(company: "Apple Inc."))
       end
-      assert_attributes account_list, build_list(:account, count, company: 'Apple Inc.')
+      assert_attributes account_list, build_list(:account, count, company: "Apple Inc.")
     end
 
     test "#create returns attributes of a model" do
@@ -84,9 +84,9 @@ module FixtureFactory
     test "#create_list with overrides returns a list of attributes of a model with overrides" do
       count = 5
       address_list = count.times.map do
-        Address.new(address_factory_attributes.merge(location: '150 Elgin St. Ottawa, ON'))
+        Address.new(address_factory_attributes.merge(location: "150 Elgin St. Ottawa, ON"))
       end
-      assert_attributes address_list, create_list(:address, count, location: '150 Elgin St. Ottawa, ON')
+      assert_attributes address_list, create_list(:address, count, location: "150 Elgin St. Ottawa, ON")
     end
 
     private
@@ -94,16 +94,16 @@ module FixtureFactory
     def user_factory_attributes
       {
         email: "tester@example.com",
-        name: %w(Tester T Testerson),
+        name: ["Tester", "T", "Testerson"],
         locked: false,
-        settings: { theme: 'Orange' },
+        settings: { theme: "Orange" },
       }
     end
 
     def address_factory_attributes
       {
-        name: 'Home',
-        location: '123 Fake St. Winnipeg, MB',
+        name: "Home",
+        location: "123 Fake St. Winnipeg, MB",
         primary: true,
       }
     end
@@ -111,7 +111,7 @@ module FixtureFactory
     def account_factory_attributes
       {
         plan: :startup,
-        company: 'Shopify Inc.',
+        company: "Shopify Inc.",
         user: build(:user),
       }
     end
