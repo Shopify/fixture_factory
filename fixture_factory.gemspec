@@ -16,17 +16,17 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/Shopify/fixture_factory"
 
   spec.files = Dir["lib/**/*.rb"]
-  spec.require_paths = %w(lib)
+  spec.require_paths = ["lib"]
 
-  spec.add_dependency("activerecord", ">= 5.2")
   spec.add_dependency("activemodel", ">= 5.2")
+  spec.add_dependency("activerecord", ">= 5.2")
   spec.add_dependency("activesupport", ">= 5.2")
 
   spec.add_development_dependency("bundler")
-  spec.add_development_dependency("sqlite3")
   spec.add_development_dependency("byebug")
-  spec.add_development_dependency("rake")
   spec.add_development_dependency("minitest")
+  spec.add_development_dependency("rake")
+  spec.add_development_dependency("sqlite3")
 
-  spec.metadata['allowed_push_host'] = "https://rubygems.org"
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
 end

@@ -59,25 +59,25 @@ module FixtureFactory
       end
       child_registry.define_factories do
         factory(:recipe_with_instructions, class: -> { Recipe }) do
-          { instructions: 'Step 1...' }
+          { instructions: "Step 1..." }
         end
       end
-      assert_equal %w(recipe), registry.all_factory_definitions.keys
-      assert_equal %w(recipe recipe_with_instructions), child_registry.all_factory_definitions.keys
+      assert_equal ["recipe"], registry.all_factory_definitions.keys
+      assert_equal ["recipe", "recipe_with_instructions"], child_registry.all_factory_definitions.keys
     end
 
     test ".all_factory_definitions returns subclass definitions first" do
       child_registry = ChildTestRegistry
-      parent_block = proc { { name: 'Parent' } }
-      child_block  = proc { { name: 'Child' } }
+      parent_block = proc { { name: "Parent" } }
+      child_block  = proc { { name: "Child" } }
       registry.define_factories do
         factory(:recipe, class: -> { Recipe }, &parent_block)
       end
       child_registry.define_factories do
         factory(:recipe, class: -> { Recipe }, &child_block)
       end
-      assert_equal 'Parent', FixtureFactory.build(:recipe, scope: registry).name
-      assert_equal 'Child', FixtureFactory.build(:recipe, scope: child_registry).name
+      assert_equal "Parent", FixtureFactory.build(:recipe, scope: registry).name
+      assert_equal "Child", FixtureFactory.build(:recipe, scope: child_registry).name
     end
 
     test ".define_factories initializes fixtury_definitions accepts a contextual block" do

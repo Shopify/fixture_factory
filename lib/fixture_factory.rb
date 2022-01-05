@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'fixture_factory/version'
-require 'fixture_factory/definition'
-require 'fixture_factory/methods'
-require 'fixture_factory/registry'
-require 'fixture_factory/sequence'
-require 'fixture_factory/errors'
+require "fixture_factory/version"
+require "fixture_factory/definition"
+require "fixture_factory/methods"
+require "fixture_factory/registry"
+require "fixture_factory/sequence"
+require "fixture_factory/errors"
 
 module FixtureFactory
   class << self

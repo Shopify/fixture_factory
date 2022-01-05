@@ -55,9 +55,9 @@ class FixturyTest < FixtureFactory::TestCase
   end
 
   test ".build with overrides returns new model" do
-    new_post = Post.new(post_factory_attributes.merge(title: 'Test'))
+    new_post = Post.new(post_factory_attributes.merge(title: "Test"))
     assert_equal new_post, FixtureFactory.build(
-      :post, context: self, scope: self.class, overrides: { title: 'Test' }
+      :post, context: self, scope: self.class, overrides: { title: "Test" }
     )
   end
 
@@ -91,9 +91,9 @@ class FixturyTest < FixtureFactory::TestCase
   end
 
   test ".create with overrides returns new model" do
-    post = Post.create(post_factory_attributes.merge(body: 'Body'))
+    post = Post.create(post_factory_attributes.merge(body: "Body"))
     assert_equal post, FixtureFactory.create(
-      :post, context: self, scope: self.class, overrides: { body: 'Body' }
+      :post, context: self, scope: self.class, overrides: { body: "Body" }
     )
   end
 
@@ -129,14 +129,14 @@ class FixturyTest < FixtureFactory::TestCase
   end
 
   test ".evaluate casts block result to a hash" do
-    hashlike = [%i(some hash)]
+    hashlike = [[:some, :hash]]
     block    = proc { hashlike }
     result   = FixtureFactory.evaluate(block, context: self)
     assert_equal hashlike.to_h, result
   end
 
   test ".evaluate accepts optional arguments" do
-    args     = %i(foo)
+    args     = [:foo]
     block    = proc { |*block_args| { args: block_args } }
     result   = FixtureFactory.evaluate(block, args: args, context: self)
     assert_equal Hash(args: args), result
@@ -146,8 +146,8 @@ class FixturyTest < FixtureFactory::TestCase
 
   def post_factory_attributes
     {
-      title: 'Sample Post',
-      body: 'This is a test.',
+      title: "Sample Post",
+      body: "This is a test.",
       active: true,
     }
   end
