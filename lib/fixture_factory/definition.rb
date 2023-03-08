@@ -42,17 +42,18 @@ module FixtureFactory
       fixture_name.present? && fixture_method.present?
     end
 
-    def run(context:)
-      FixtureFactory.evaluate(runner, context: context)
+    def run(context:, seed: nil)
+      FixtureFactory.evaluate(runner(seed), context: context)
     end
 
     private
 
-    def runner
+    def runner(seed)
       definition = self
       args = sequence.take(1)
       -> do
         attributes = FixtureFactory.evaluate(definition.block, args: args, context: self)
+
         if definition.from_fixture?
           begin
             fixture = send(*definition.fixture_args)
@@ -61,6 +62,12 @@ module FixtureFactory
             raise WrongFixtureMethodError, definition.fixture_args.first
           end
         end
+
+        if seed
+          seed_attributes = FixtureFactory.evaluate(seed.block, args: args, context: self)
+          attributes.reverse_merge!(seed_attributes)
+        end
+
         attributes
       end
     end

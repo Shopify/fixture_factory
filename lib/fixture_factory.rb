@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "fixture_factory/version"
+require "fixture_factory/seed"
 require "fixture_factory/definition"
 require "fixture_factory/methods"
 require "fixture_factory/registry"
@@ -36,10 +37,11 @@ module FixtureFactory
     end
 
     def retrieve(name, scope:, context: nil, overrides: {})
+      seed = scope.all_factory_seeds[name]
       definition = scope.all_factory_definitions.fetch(name) do
         raise NotFoundError, name
       end
-      attributes = definition.run(context: context)
+      attributes = definition.run(context: context, seed: seed)
       attributes.merge!(overrides).delete(:id)
       [definition.klass, attributes]
     end

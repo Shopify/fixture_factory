@@ -8,6 +8,7 @@ module FixtureFactory
 
     included do
       class_attribute(:fixture_factory_definitions) # :nodoc:
+      class_attribute(:fixture_factory_seeds) # :nodoc:
     end
 
     class_methods do
@@ -61,6 +62,12 @@ module FixtureFactory
         fixture_factory_definitions[name] = Definition.new(name, options)
       end
 
+      def seed(name, &block)
+        options = {}
+        options[:block] = block if block
+        fixture_factory_seeds[name] = Seed.new(name, options)
+      end
+
       # Sets up factories definitions for the current class scope. Accepts an
       # optional block to define factories in.
       #
@@ -77,6 +84,7 @@ module FixtureFactory
       # end
       def define_factories(&block)
         self.fixture_factory_definitions = {}.with_indifferent_access
+        self.fixture_factory_seeds = {}.with_indifferent_access
         instance_exec(&block) if block.present?
       end
 
@@ -85,6 +93,13 @@ module FixtureFactory
           ancestor.respond_to?(:fixture_factory_definitions)
         end
         [self, *fixtury_ancestors].map(&:fixture_factory_definitions).reduce(:reverse_merge)
+      end
+
+      def all_factory_seeds # :nodoc:
+        fixtury_ancestors = ancestors.select do |ancestor|
+          ancestor.respond_to?(:fixture_factory_seeds)
+        end
+        [self, *fixtury_ancestors].map(&:fixture_factory_seeds).reduce(:reverse_merge)
       end
     end
   end

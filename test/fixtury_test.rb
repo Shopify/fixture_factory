@@ -6,21 +6,24 @@ class FixturyTest < FixtureFactory::TestCase
   include FixtureFactory::Registry
 
   define_factories do
-    factory(:post, class: -> { Post }) do
-      post_factory_attributes
+    seed(:post) do |counter|
+      { number: counter }
+    end
+    factory(:post, class: -> { Post }) do |counter|
+      post_factory_attributes(counter)
     end
   end
 
   test ".attributes_for returns attributes of a model" do
-    assert_equal post_factory_attributes, FixtureFactory.attributes_for(
-      :post, context: self, scope: self.class, overrides: {}
+    assert_equal post_factory_attributes(42), FixtureFactory.attributes_for(
+      :post, context: self, scope: self.class, overrides: { number: 42 }
     )
   end
 
   test ".attributes_for with overrides returns attributes of a model" do
-    override_attributes = post_factory_attributes.merge(active: false)
+    override_attributes = post_factory_attributes(42).merge(active: false)
     assert_equal override_attributes, FixtureFactory.attributes_for(
-      :post, context: self, scope: self.class, overrides: { active: false }
+      :post, context: self, scope: self.class, overrides: { active: false, number: 42 }
     )
   end
 
@@ -48,16 +51,16 @@ class FixturyTest < FixtureFactory::TestCase
   end
 
   test ".build returns new model" do
-    new_post = Post.new(post_factory_attributes)
+    new_post = Post.new(post_factory_attributes(42))
     assert_equal new_post, FixtureFactory.build(
-      :post, context: self, scope: self.class, overrides: {}
+      :post, context: self, scope: self.class, overrides: { number: 42 }
     )
   end
 
   test ".build with overrides returns new model" do
-    new_post = Post.new(post_factory_attributes.merge(title: "Test"))
+    new_post = Post.new(post_factory_attributes(42).merge(title: "Test"))
     assert_equal new_post, FixtureFactory.build(
-      :post, context: self, scope: self.class, overrides: { title: "Test" }
+      :post, context: self, scope: self.class, overrides: { title: "Test", number: 42 }
     )
   end
 
@@ -84,16 +87,16 @@ class FixturyTest < FixtureFactory::TestCase
   end
 
   test ".create returns attributes of a model" do
-    post = Post.create(post_factory_attributes)
+    post = Post.create(post_factory_attributes(42))
     assert_equal post, FixtureFactory.create(
-      :post, context: self, scope: self.class, overrides: {}
+      :post, context: self, scope: self.class, overrides: { number: 42 }
     )
   end
 
   test ".create with overrides returns new model" do
-    post = Post.create(post_factory_attributes.merge(body: "Body"))
+    post = Post.create(post_factory_attributes(42).merge(body: "Body"))
     assert_equal post, FixtureFactory.create(
-      :post, context: self, scope: self.class, overrides: { body: "Body" }
+      :post, context: self, scope: self.class, overrides: { body: "Body", number: 42 }
     )
   end
 
@@ -144,11 +147,12 @@ class FixturyTest < FixtureFactory::TestCase
 
   private
 
-  def post_factory_attributes
+  def post_factory_attributes(number)
     {
       title: "Sample Post",
       body: "This is a test.",
       active: true,
+      number: number,
     }
   end
 end
