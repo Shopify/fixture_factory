@@ -1,8 +1,6 @@
 # FixtureFactory
 
-FixtureFactory is an attempt to merge concepts from [Rails Fixtures](http://api.rubyonrails.org/v5.2.0/classes/ActiveRecord/FixtureSet.html),
-[Hermes Builders](https://github.com/plataformatec/hermes/blob/master/lib/hermes/builders.rb),
-and [Factory Bot Factories](https://github.com/thoughtbot/factory_bot) to bridge the gap between factories and fixtures.
+FixtureFactory is an attempt to merge concepts from [Rails Fixtures](http://api.rubyonrails.org/v5.2.0/classes/ActiveRecord/FixtureSet.html) and [Factory Bot Factories](https://github.com/thoughtbot/factory_bot) to bridge the gap between factories and fixtures.
 
 ## Fixtures
 
