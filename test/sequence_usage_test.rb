@@ -11,6 +11,14 @@ module FixtureFactory
       factory(:user) do |count|
         { email: "user-#{count}@example.com" }
       end
+
+      factory(:locked_user, parent: :user) do
+        { locked: true }
+      end
+
+      factory(:bob, parent: :user) do
+        { name: "Bob" }
+      end
     end
 
     test "attributes_for" do
@@ -50,6 +58,10 @@ module FixtureFactory
       end
       assert_not_equal(*create_list(:user, 2).map(&:email))
       assert_not_equal create_list(:user, 2).map(&:email), create_list(:user, 2).map(&:email)
+    end
+
+    test "uniqueness preserved with parent" do
+      assert_not_equal(create(:bob).email, create(:locked_user).email)
     end
   end
 end
