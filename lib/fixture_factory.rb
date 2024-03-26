@@ -32,6 +32,7 @@ module FixtureFactory
 
     def extract_attributes(object)
       raise ArgumentError, "FixtureFactory blocks must return a hash-like object" unless object.respond_to?(:to_h)
+
       object.to_h.symbolize_keys
     end
 
