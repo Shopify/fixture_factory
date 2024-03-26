@@ -4,13 +4,19 @@ module FakeRecord
   class Base
     include ActiveModel::Model
 
-    def self.attributes(*names)
-      define_method(:attributes) do
-        names.map do |name|
-          [name, send(name)]
-        end.to_h
+    class << self
+      def attributes(*names)
+        define_method(:attributes) do
+          names.map do |name|
+            [name, send(name)]
+          end.to_h
+        end
+        attr_accessor(*names)
       end
-      attr_accessor(*names)
+
+      def create(attributes)
+        new(attributes).tap(&:save!)
+      end
     end
 
     def ==(other)
@@ -23,10 +29,6 @@ module FakeRecord
 
     def persisted?
       @persisted
-    end
-
-    def self.create(attributes)
-      new(attributes).tap(&:save!)
     end
   end
 end
