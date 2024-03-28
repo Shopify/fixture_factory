@@ -20,13 +20,13 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+          bundler: latest
       - name: Install required packages
         run: |
           sudo apt-get update
           sudo apt-get -y install libsqlite3-dev
       - name: Run tests
         run: |
-          gem install bundler
           bundle install --jobs 4 --retry 3
           bundle exec rake
   lint:
