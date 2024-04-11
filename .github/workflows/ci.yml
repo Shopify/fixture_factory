@@ -11,6 +11,8 @@ jobs:
           - 2.7
           - 3.0
           - 3.1
+          - 3.2
+          - 3.3
     name: Tests Ruby ${{ matrix.ruby }}
     steps:
       - uses: actions/checkout@v1
@@ -18,23 +20,21 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+          bundler: latest
       - name: Install required packages
         run: |
           sudo apt-get update
           sudo apt-get -y install libsqlite3-dev
       - name: Run tests
         run: |
-          gem install bundler
           bundle install --jobs 4 --retry 3
           bundle exec rake
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Set up Ruby 3.1
+      - name: Set up Ruby
         uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.1
       - name: Install required packages
         run: |
           sudo apt-get update
