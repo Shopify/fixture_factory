@@ -13,7 +13,7 @@ module FixtureFactory
       self.fixture_method = options.fetch(:via)    { parent.fixture_method }
       self.fixture_name   = options.fetch(:like)   { parent.fixture_name }
       self.block          = options.fetch(:block)  { EMPTY_BLOCK }
-      self.sequence       = Sequence.new
+      self.sequence       = parent ? parent.sequence : Sequence.new
     end
 
     def block
