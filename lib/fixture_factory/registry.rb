@@ -58,11 +58,13 @@ module FixtureFactory
         parent = all_factory_definitions[options[:parent]]
         options[:parent] = parent if options.key?(:parent)
         options[:block]  = block if block
-        fixture_factory_definitions[name] = Definition.new(name, options)
+        own_factory_definitions[name] = Definition.new(name, options)
       end
 
       # Sets up factories definitions for the current class scope. Accepts an
-      # optional block to define factories in.
+      # optional block to define factories in. Calling it again on the same
+      # class, for instance from a concern's +included+ block and then from the
+      # class itself, adds to the definitions instead of replacing them.
       #
       # === Example
       #
@@ -76,7 +78,7 @@ module FixtureFactory
       #   factory(:post)
       # end
       def define_factories(&block)
-        self.fixture_factory_definitions = {}.with_indifferent_access
+        own_factory_definitions
         instance_exec(&block) if block.present?
       end
 
@@ -85,6 +87,21 @@ module FixtureFactory
           ancestor.respond_to?(:fixture_factory_definitions)
         end
         [self, *fixtury_ancestors].map(&:fixture_factory_definitions).reduce(:reverse_merge)
+      end
+
+      private
+
+      # The definitions hash this class owns. +class_attribute+ hands a
+      # subclass its superclass's hash, so writing to that hash in place would
+      # change the definitions of the superclass and of every other subclass.
+      # The first write from a class gives it a hash of its own instead.
+      # Ancestors' definitions stay visible through +all_factory_definitions+.
+      def own_factory_definitions
+        inherited = superclass.fixture_factory_definitions if superclass.respond_to?(:fixture_factory_definitions)
+        if fixture_factory_definitions.nil? || fixture_factory_definitions.equal?(inherited)
+          self.fixture_factory_definitions = {}.with_indifferent_access
+        end
+        fixture_factory_definitions
       end
     end
   end

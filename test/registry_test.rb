@@ -80,6 +80,62 @@ module FixtureFactory
       assert_equal "Child", FixtureFactory.build(:recipe, scope: child_registry).name
     end
 
+    test ".factory outside define_factories does not change the superclass or sibling definitions" do
+      registry.define_factories do
+        factory(:recipe, class: -> { Recipe }) { { name: "Parent" } }
+      end
+      first_child = Class.new(registry) do
+        factory(:recipe, class: -> { Recipe }) { { name: "First" } }
+      end
+      second_child = Class.new(registry) do
+        factory(:recipe, class: -> { Recipe }) { { name: "Second" } }
+      end
+
+      assert_equal "Parent", FixtureFactory.build(:recipe, scope: registry).name
+      assert_equal "First", FixtureFactory.build(:recipe, scope: first_child).name
+      assert_equal "Second", FixtureFactory.build(:recipe, scope: second_child).name
+    end
+
+    test ".factory outside define_factories keeps inherited definitions visible" do
+      registry.define_factories do
+        factory(:recipe, class: -> { Recipe }) { { name: "Parent" } }
+      end
+      child = Class.new(registry) do
+        factory(:recipe_with_instructions, parent: :recipe) do
+          { instructions: "Step 1..." }
+        end
+      end
+
+      assert_equal ["recipe"], registry.all_factory_definitions.keys
+      assert_equal ["recipe", "recipe_with_instructions"], child.all_factory_definitions.keys.sort
+      recipe = FixtureFactory.build(:recipe_with_instructions, scope: child)
+      assert_equal ["Parent", "Step 1..."], [recipe.name, recipe.instructions]
+    end
+
+    test ".define_factories adds to the definitions a concern already declared on the class" do
+      concern = Module.new do
+        extend ActiveSupport::Concern
+
+        included do
+          define_factories do
+            factory(:recipe, class: -> { Recipe })
+          end
+        end
+      end
+      klass = Class.new(registry) do
+        include concern
+
+        define_factories do
+          factory(:recipe_with_instructions, parent: :recipe) do
+            { instructions: "Step 1..." }
+          end
+        end
+      end
+
+      assert_equal ["recipe", "recipe_with_instructions"], klass.all_factory_definitions.keys.sort
+      assert_nil registry.fixture_factory_definitions
+    end
+
     test ".define_factories initializes fixtury_definitions accepts a contextual block" do
       test_case = self
       assert_nil registry.fixture_factory_definitions
