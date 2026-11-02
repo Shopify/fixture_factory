@@ -117,10 +117,7 @@ class AddressTest < ActiveSupport::TestCase
 end
 ```
 
-Definitions belong to the class that declares them. A subclass that calls `factory` gets its own set of definitions,
-so a factory it declares never replaces one with the same name in its superclass or in a sibling class, and the
-superclass's definitions stay visible to it. Calling `define_factories` again on the same class, for example from a
-concern's `included` block and then from the class itself, adds to that class's definitions instead of replacing them.
+Definitions belong to the class that declares them. Calling `define_factories` multiple times appends to existing definitions instead of replacing them.
 
 ### Sequences
 

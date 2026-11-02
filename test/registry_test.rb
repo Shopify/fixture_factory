@@ -133,12 +133,12 @@ module FixtureFactory
       end
 
       assert_equal ["recipe", "recipe_with_instructions"], klass.all_factory_definitions.keys.sort
-      assert_nil registry.fixture_factory_definitions
+      assert_empty registry.fixture_factory_definitions
     end
 
     test ".define_factories initializes fixtury_definitions accepts a contextual block" do
       test_case = self
-      assert_nil registry.fixture_factory_definitions
+      assert_empty registry.fixture_factory_definitions
       registry.define_factories do
         test_case.assert_equal(test_case.registry, self)
       end
