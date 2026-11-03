@@ -1,0 +1,26 @@
+name: Release
+
+on: workflow_dispatch
+
+jobs:
+  release:
+    permissions:
+      contents: write
+      id-token: write
+
+    environment: release
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+    - name: Install required packages
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install libsqlite3-dev
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+      with:
+        bundler-cache: true
+        ruby-version: 3.3
+    - uses: rubygems/release-gem@052cc82692552de3ef2b81fd670e41d13cba8092 # v1.4.0
