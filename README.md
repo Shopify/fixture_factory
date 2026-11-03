@@ -117,6 +117,8 @@ class AddressTest < ActiveSupport::TestCase
 end
 ```
 
+Definitions belong to the class that declares them. Calling `define_factories` multiple times appends to existing definitions instead of replacing them.
+
 ### Sequences
 
 Factories often don't play well with uniqueness constraints. If you need to generate unique values in your factories,

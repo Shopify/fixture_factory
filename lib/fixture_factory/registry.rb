@@ -6,10 +6,6 @@ module FixtureFactory
   module Registry
     extend ActiveSupport::Concern
 
-    included do
-      class_attribute(:fixture_factory_definitions) # :nodoc:
-    end
-
     class_methods do
       # Defines a fixture given a name, options, and a block.
       #
@@ -62,7 +58,7 @@ module FixtureFactory
       end
 
       # Sets up factories definitions for the current class scope. Accepts an
-      # optional block to define factories in.
+      # optional block to define factories in. Calling this method multiple times appends to existing definitions.
       #
       # === Example
       #
@@ -76,8 +72,16 @@ module FixtureFactory
       #   factory(:post)
       # end
       def define_factories(&block)
-        self.fixture_factory_definitions = {}.with_indifferent_access
+        fixture_factory_definitions
         instance_exec(&block) if block.present?
+      end
+
+      def fixture_factory_definitions # :nodoc:
+        @fixture_factory_definitions ||= {}.with_indifferent_access
+      end
+
+      def fixture_factory_definitions=(value) # :nodoc:
+        @fixture_factory_definitions = value
       end
 
       def all_factory_definitions # :nodoc:
